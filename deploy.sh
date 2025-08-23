@@ -1,31 +1,20 @@
 #!/bin/bash
-set -e
+echo "🚀 Starting Ocean2Joy deploy from root..."
 
-echo "🚀 Starting Ocean2Joy deploy..."
+# Проверка, что git инициализирован
+if [ ! -d ".git" ]; then
+  echo "❌ This is not a git repo. Run 'git init' and add remote first."
+  exit 1
+fi
 
-# Папка проекта
-PROJECT_DIR="$(pwd)"
+# Добавляем все файлы
+git add -A
 
-# 1. Чистим старый билд
-rm -rf "$PROJECT_DIR/docs"
-mkdir "$PROJECT_DIR/docs"
+# Делаем коммит с меткой времени
+git commit -m "Deploy update $(date '+%Y-%m-%d %H:%M:%S')"
 
-# 2. Если проект на Vite/React/Node (раскомментируй при необходимости)
-# echo "📦 Installing dependencies..."
-# npm install
-
-# echo "⚡ Building project..."
-# npm run build
-
-# 3. Для простого HTML/JS/CSS (как у нас сейчас)
-echo "📋 Copying files into /docs..."
-cp -r "$PROJECT_DIR/index.html" "$PROJECT_DIR/docs/"
-cp -r "$PROJECT_DIR/assets" "$PROJECT_DIR/docs/" 2>/dev/null || true
-
-# 4. Git push
-echo "📤 Pushing to GitHub..."
-git add .
-git commit -m "deploy: auto build to /docs"
+# Отправляем на GitHub в main
 git push origin main
 
-echo "✅ Deploy finished! Your site will update at GitHub Pages in ~1 minute."
+echo "✅ Deploy complete! Visit your site:"
+echo "🌍 https://theadmoon.github.io/ocean-field-simulator/"
