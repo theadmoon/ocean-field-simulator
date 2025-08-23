@@ -1,48 +1,32 @@
 #!/bin/bash
-echo "🌊 Starting Ocean2Joy deploy..."
+echo "🚀 Starting Ocean2Joy deploy..."
 
-# Проверка, что git инициализирован
-if [ ! -d ".git" ]; then
-  echo "❌ Это не git-репозиторий. Сначала сделай git init и настрой remote."
-  exit 1
+# Проверка на package.json → билд
+if [ -f "package.json" ]; then
+  echo "📦 package.json найден — собираем проект..."
+  npm run build || { echo "❌ Ошибка при сборке!"; exit 1; }
+  BUILD_DIR="build"
+else
+  echo "📂 package.json не найден — копируем весь проект..."
+  BUILD_DIR="."
 fi
 
 # Чистим docs/
 echo "🧹 Cleaning docs/..."
-rm -rf docs
-mkdir docs
+rm -rf docs/*
+mkdir -p docs
 
-# Если есть package.json → запускаем npm build
-if [ -f "package.json" ]; then
-  echo "⚡ package.json найден — запускаем npm run build..."
-  npm install
-  npm run build
+# Копируем всё, кроме docs и скрытых .git
+rsync -av --exclude='docs' --exclude='.git' "$BUILD_DIR"/ docs/
 
-  # Копируем результат билда (например в dist/) → docs/
-  if [ -d "dist" ]; then
-    cp -r dist/* docs/
-  elif [ -d "build" ]; then
-    cp -r build/* docs/
-  else
-    echo "⚠️ npm run build завершился, но dist/ или build/ не найдены!"
-  fi
-else
-  echo "📂 package.json не найден — копируем весь проект..."
-  cp -r * docs/
-  # Убираем саму папку docs из копии (чтобы не зациклиться)
-  rm -rf docs/docs
-fi
-
-# Добавляем .nojekyll, чтобы GitHub Pages поддерживал вложенные папки
-echo "" > docs/.nojekyll
-
-# Добавляем все файлы
+# Добавляем в git
 git add -A
 
-# Делаем коммит с меткой времени
-git commit -m "🚀 Deploy update $(date '+%Y-%m-%d %H:%M:%S')"
+# Коммит с меткой времени
+git commit -m "Deploy update $(date '+%Y-%m-%d %H:%M:%S')"
 
-# Отправляем на GitHub
+# Пушим
 git push origin main
 
-echo "✅ Deploy complete! Сайт: https://theadmoon.github.io/ocean-field-simulator/"
+echo "✅ Deploy complete! Visit your site:"
+echo "👉 https://theadmoon.github.io/ocean-field-simulator/"
