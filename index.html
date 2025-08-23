@@ -1,52 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ocean2Joy – Ocean Simulator</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <meta charset="UTF-8">
+  <title>Ocean2Joy Simulator</title>
   <style>
-    body, html { margin: 0; padding: 0; height: 100%; font-family: Arial, sans-serif; }
-    #map { width: 100%; height: 100vh; }
-    .hero-popup { font-size: 14px; }
-    .hero-title { font-weight: bold; margin-bottom: 4px; }
-    .progress { background: #eee; border-radius: 6px; height: 8px; margin-top: 4px; }
-    .progress-bar { background: #38bdf8; height: 8px; border-radius: 6px; }
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(to bottom, #0099cc, #003366);
+      color: white;
+      text-align: center;
+    }
+    h1 {
+      font-size: 3em;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
   </style>
 </head>
 <body>
-  <div id="map"></div>
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script>
-    var map = L.map('map').setView([0,0], 2);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    const heroes = [
-      { name: "Drop #1", level: "Drop", lat: 10, lon: 20, progress: 10, skin: "💧" },
-      { name: "Shelly", level: "Shell", lat: -5, lon: 40, progress: 30, skin: "🐚" },
-      { name: "Rafty", level: "Raft", lat: 20, lon: -30, progress: 45, skin: "🛶" },
-      { name: "Saily", level: "Boat", lat: -25, lon: -10, progress: 60, skin: "⛵" },
-      { name: "Warrior", level: "Ship", lat: 35, lon: 60, progress: 80, skin: "🚢" },
-      { name: "Admiral", level: "Fleet", lat: -40, lon: 80, progress: 95, skin: "⚓" },
-      { name: "Pearl", level: "Epic Drop", lat: 15, lon: 15, progress: 50, skin: "✨💧" },
-      { name: "Coral Lord", level: "Decorated Shell", lat: -15, lon: -45, progress: 70, skin: "🌊🐚" },
-      { name: "Tide Master", level: "Legendary Boat", lat: 45, lon: -60, progress: 85, skin: "🌟⛵" },
-      { name: "Ocean King", level: "Mythic Fleet", lat: -55, lon: 5, progress: 100, skin: "👑⚓" }
-    ];
-
-    heroes.forEach(hero => {
-      const marker = L.marker([hero.lat, hero.lon]).addTo(map);
-      marker.bindPopup(`
-        <div class="hero-popup">
-          <div class="hero-title">${hero.skin} ${hero.name}</div>
-          <div>Level: ${hero.level}</div>
-          <div class="progress"><div class="progress-bar" style="width:${hero.progress}%"></div></div>
-          <div>Progress: ${hero.progress}%</div>
-        </div>
-      `);
-    });
-  </script>
+  <h1>🌊 Ocean2Joy Simulator is live 🎉</h1>
 </body>
 </html>
