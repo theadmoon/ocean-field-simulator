@@ -1,0 +1,8 @@
+# SSH config template
+# Copy your private key to ~/.ssh/id_rsa or set IdentityFile below.
+# Example host alias:
+Host prod
+    HostName example.com
+    User deploy
+    IdentityFile ~/.ssh/developer1.id_rsa
+

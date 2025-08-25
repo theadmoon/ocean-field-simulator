@@ -1,32 +1,20 @@
-#!/bin/bash
-echo "🚀 Starting Ocean2Joy deploy..."
+#!/usr/bin/env bash
+set -e
 
-# Проверка на package.json → билд
-if [ -f "package.json" ]; then
-  echo "📦 package.json найден — собираем проект..."
-  npm run build || { echo "❌ Ошибка при сборке!"; exit 1; }
-  BUILD_DIR="build"
-else
-  echo "📂 package.json не найден — копируем весь проект..."
-  BUILD_DIR="."
-fi
+SSH_KEY="$HOME/.ssh/developer1_fullkey"
+TARGET="developer1@ocean2joy.com"
+DEST="/var/www/ocean2joy.com"
 
-# Чистим docs/
-echo "🧹 Cleaning docs/..."
-rm -rf docs/*
-mkdir -p docs
+echo "▶ Starting Ocean2Joy deployment..."
+echo "▶ Target: $TARGET → $DEST"
 
-# Копируем всё, кроме docs и скрытых .git
-rsync -av --exclude='docs' --exclude='.git' "$BUILD_DIR"/ docs/
+echo "▶ Testing SSH connection..."
+ssh -i "$SSH_KEY" "$TARGET" "echo 'SSH connection OK'"
 
-# Добавляем в git
-git add -A
+echo "▶ Cleaning target directory on server..."
+ssh -i "$SSH_KEY" "$TARGET" "rm -rf $DEST/*"
 
-# Коммит с меткой времени
-git commit -m "Deploy update $(date '+%Y-%m-%d %H:%M:%S')"
+echo "▶ Copying via rsync..."
+rsync -avz -e "ssh -i $SSH_KEY" ./ "$TARGET:$DEST/"     --exclude ".git"     --exclude ".idea"     --exclude ".vscode"     --exclude "node_modules"     --exclude "*.log"     --exclude "*.zip"
 
-# Пушим
-git push origin main
-
-echo "✅ Deploy complete! Visit your site:"
-echo "👉 https://theadmoon.github.io/ocean-field-simulator/"
+echo "✅ Deploy finished successfully!"

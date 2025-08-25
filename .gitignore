@@ -1,37 +1,23 @@
-# 🔑 Никогда не пушим токен
-token.txt
-
-# 🛠️ Локальные скрипты и инструменты
-git-bash-tools/
-git-bash-tools (1)/
-run_deploy.bat
-Git Bash.lnk
-
-# 📝 Лог-файлы и системные файлы
-*.log
-*.tmp
-*.bak
-*.swp
-*.swo
-*.DS_Store
+# OS junk
+.DS_Store
 Thumbs.db
-ehthumbs.db
-desktop.ini
 
-# ⚙️ IDE и редакторы
-.vscode/
-.idea/
-*.iml
-
-# 🐍 Python / Node / etc (если будешь расширять проект)
+# Python
 __pycache__/
 *.pyc
+.venv/
+
+# Node
 node_modules/
 
-# 🚀 Сборочные артефакты
-dist/
-build/
+# Logs
+*.log
 
-# docs игнорируем, но оставляем .gitkeep
-/docs/*
-!docs/.gitkeep
+# Env files
+.env
+.env.*
+
+# SSH materials: never commit secrets
+ssh/*
+!ssh/config
+!ssh/PUT_YOUR_PRIVATE_KEY_HERE.txt

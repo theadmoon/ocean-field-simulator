@@ -1,0 +1,1 @@
+Place your private key (e.g., id_rsa) in your personal ~/.ssh directory, not in this repo/archive.

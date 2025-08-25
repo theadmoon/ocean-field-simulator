@@ -1,34 +1,24 @@
-# Ocean2Joy Deployment Guide
+# 🚀 AutoDeploy v6
 
-This project uses **deploy.sh** to automate deployment.
+## Состав
+- `autodeploy.sh` — полный автодеплой (GitHub + Releases + сервер ocean2joy.com)
+- `PROJECT_JOURNAL.md` — журнал версий
+- `archives/` — сюда будут сохраняться архивы версий
 
-## 🚀 Usage
+## Требования
+- Установлен `git` и настроен SSH-доступ к GitHub
+- Установлен `gh` (GitHub CLI), авторизация `gh auth login`
+- Рабочий SSH-доступ на ocean2joy.com (alias `prod` в `~/.ssh/config`)
 
-1. Open **Git Bash** in the root of the project.
-2. Make sure you are on the `main` branch:
-
-   ```bash
-   git checkout main
-   git pull origin main
-   ```
-
-3. Run the deployment script:
-
-   ```bash
-   ./deploy.sh
-   ```
-
-## 📦 What it does
-
-- If `package.json` exists → runs `npm install && npm run build`
-- Clears and recreates `docs/`
-- Copies build output (`dist/` or `build/`) into `docs/`
-- If no build folder → copies `index.html`, `src/`, `assets/` and other project files into `docs/`
-- Commits changes and pushes to GitHub
-
-## 🌐 Result
-
-GitHub Pages serves the site from `docs/` on the `main` branch.
-
-URL: `https://<username>.github.io/<repo>/`
+## Использование
+```bash
+chmod +x autodeploy.sh
+./autodeploy.sh
+```
+В результате:
+- Создаётся архив в `archives/`
+- Версия фиксируется в `PROJECT_JOURNAL.md`
+- Изменения пушатся в GitHub
+- Создаётся релиз в GitHub Releases
+- Файлы деплоятся на ocean2joy.com
 
