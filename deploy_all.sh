@@ -9,12 +9,12 @@ echo "=== Ocean Field Simulator :: Full Release Deploy ==="
 echo "[1] Starting SSH agent and adding keys..."
 eval $(ssh-agent -s)
 
-ssh-add ~/.ssh/github_key
-ssh-add ~/.ssh/developer1_fullkey
+ssh-add ~/.ssh/github_key 2>/dev/null || echo "ℹ️ GitHub key already loaded"
+ssh-add ~/.ssh/developer1_fullkey 2>/dev/null || echo "ℹ️ Prod key already loaded"
 
 # --- Шаг 2. Проверка GitHub ---
 echo "[2] Checking GitHub connection..."
-if ssh -T github 2>&1 | grep -q "successfully authenticated"; then
+if ssh -T github 2>&1 | grep -q "You've successfully authenticated"; then
     echo "✅ GitHub auth OK"
 else
     echo "❌ GitHub auth FAILED"
