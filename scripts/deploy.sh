@@ -8,7 +8,6 @@ echo "[1] Starting deploy to server..."
 TARGET="prod:/var/www/ocean2joy.com"
 
 rsync -az --delete \
-  -e "ssh -F ~/.ssh/config" \
   --exclude ".git" \
   --exclude "docs" \
   --exclude "scripts" \
