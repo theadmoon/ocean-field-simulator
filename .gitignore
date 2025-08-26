@@ -17,7 +17,16 @@ node_modules/
 .env
 .env.*
 
-# SSH materials: never commit secrets
+# SSH (исключаем всё, кроме примеров и конфига)
 ssh/*
 !ssh/config
 !ssh/PUT_YOUR_PRIVATE_KEY_HERE.txt
+!ssh/README.md
+!ssh/ssh_config.example
+
+# Archives and zips
+archives/
+*.zip
+
+# Windows shortcuts
+*.lnk
