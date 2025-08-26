@@ -1,30 +1,32 @@
 #!/bin/bash
 set -e
 
-echo "=== Starting deploy ==="
+echo "=== Ocean Field Simulator :: Deploy ==="
 
-# Запуск ssh-agent и подключение ключей
-eval "$(ssh-agent -s)"
+# [1] Start SSH agent and add keys
+echo "[1] Starting SSH agent..."
+eval $(ssh-agent -s)
+
 ssh-add ~/.ssh/github_key
 ssh-add ~/.ssh/developer1_fullkey
 
-# Проверка подключения к GitHub
-ssh -T github || { echo "GitHub connection failed"; exit 1; }
+# [2] Checking GitHub connection
+echo "[2] Checking GitHub connection..."
+if ssh -T github 2>&1 | grep -q "successfully authenticated"; then
+    echo "✅ GitHub auth OK"
+else
+    echo "❌ GitHub auth FAILED"
+    exit 1
+fi
 
-# Проверка подключения к серверу
-ssh prod "echo prod ok" || { echo "Server connection failed"; exit 1; }
+# [3] Deploy to Production
+echo "[3] Deploying to Production..."
+TARGET="prod:/var/www/ocean2joy.com"
 
-# Коммит и пуш на GitHub
-git add -A
-git commit -m "Auto-deploy $(date '+%Y-%m-%d %H:%M:%S')" || true
-git push github main
-
-# Деплой на сервер (исключаем ненужные папки и файлы)
-rsync -avz --delete \
+rsync -az --delete \
   --exclude ".git" \
-  --exclude "docs/" \
-  --exclude "*.zip" \
-  --exclude "PROJECT_JOURNAL.md" \
-  ./ prod:/var/www/ocean2joy.com
+  --exclude "docs" \
+  --exclude "scripts" \
+  ./ $TARGET
 
-echo "=== Deploy finished successfully ==="
+echo "✅ Deploy completed successfully"
