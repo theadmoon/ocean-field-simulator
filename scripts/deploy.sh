@@ -1,25 +1,30 @@
 #!/bin/bash
-# === Ocean Field Simulator : Deploy ===
+set -e
 
-echo "== Starting SSH agent and adding keys... =="
-eval $(ssh-agent -s)
+echo "=== Starting deploy ==="
+
+# Запуск ssh-agent и подключение ключей
+eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/github_key
 ssh-add ~/.ssh/developer1_fullkey
 
-echo "== Checking GitHub connection... =="
-ssh -T github || { echo "GitHub auth failed"; exit 1; }
+# Проверка подключения к GitHub
+ssh -T github || { echo "GitHub connection failed"; exit 1; }
 
-echo "== Checking Production server connection... =="
-ssh prod "echo prod ok" || { echo "Prod server auth failed"; exit 1; }
+# Проверка подключения к серверу
+ssh prod "echo prod ok" || { echo "Server connection failed"; exit 1; }
 
-echo "== Creating commit =="
+# Коммит и пуш на GitHub
 git add -A
-git commit -m "Auto deploy $(date '+%Y.%m.%d_%H%M')"
+git commit -m "Auto-deploy $(date '+%Y-%m-%d %H:%M:%S')" || true
+git push github main
 
-echo "== Pushing commit & tags to GitHub... =="
-git push github main || { echo "GitHub push failed"; exit 1; }
+# Деплой на сервер (исключаем ненужные папки и файлы)
+rsync -avz --delete \
+  --exclude ".git" \
+  --exclude "docs/" \
+  --exclude "*.zip" \
+  --exclude "PROJECT_JOURNAL.md" \
+  ./ prod:/var/www/ocean2joy.com
 
-echo "== Deploying to Production... =="
-rsync -avz --delete ./ prod:/var/www/ocean2joy.com
-
-echo "== Deploy finished successfully =="
+echo "=== Deploy finished successfully ==="
